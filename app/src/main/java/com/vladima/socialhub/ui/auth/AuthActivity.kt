@@ -91,6 +91,7 @@ class AuthActivity : ComponentActivity() {
             viewModel.isSuccess.collect { isSuccess ->
                 if (isSuccess) {
                     Toast.makeText(this@AuthActivity, getString(R.string.user_logged_in), Toast.LENGTH_SHORT).show()
+                    startMainActivity()
                 }
             }
         }
