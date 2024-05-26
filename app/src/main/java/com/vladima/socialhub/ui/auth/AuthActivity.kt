@@ -128,7 +128,7 @@ class AuthActivity : ComponentActivity() {
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
                                 value = viewModel.email,
                                 onValueChange = { viewModel.email = it },
-                                shape = RoundedCornerShape(dimensionResource(id = R.dimen.roundedCornerShape)),
+                                shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner_shape)),
                                 isError = listOf(R.string.WrongEmail, R.string.FieldsNotFilled, R.string.EmailAlreadyInUse).contains(errorMsg)
                             )
                             OutlinedTextField(
@@ -139,7 +139,7 @@ class AuthActivity : ComponentActivity() {
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
                                 value = viewModel.userName,
                                 onValueChange = { viewModel.userName = it },
-                                shape = RoundedCornerShape(dimensionResource(id = R.dimen.roundedCornerShape)),
+                                shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner_shape)),
                                 isError = errorMsg == R.string.FieldsNotFilled
                             )
                             OutlinedTextField(
@@ -151,7 +151,7 @@ class AuthActivity : ComponentActivity() {
                                 visualTransformation = PasswordVisualTransformation(),
                                 value = viewModel.password,
                                 onValueChange = { viewModel.password = it },
-                                shape = RoundedCornerShape(dimensionResource(id = R.dimen.roundedCornerShape)),
+                                shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner_shape)),
                                 isError = errorMsg == R.string.FieldsNotFilled
                             )
                             Spacer(modifier = Modifier.height(20.dp))
@@ -224,7 +224,7 @@ class AuthActivity : ComponentActivity() {
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
                                 value = viewModel.email,
                                 onValueChange = { viewModel.email = it },
-                                shape = RoundedCornerShape(dimensionResource(id = R.dimen.roundedCornerShape)),
+                                shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner_shape)),
                                 isError = listOf(R.string.WrongEmail, R.string.FieldsNotFilled).contains(errorMsg)
                             )
                             OutlinedTextField(
@@ -236,7 +236,7 @@ class AuthActivity : ComponentActivity() {
                                 visualTransformation = PasswordVisualTransformation(),
                                 value = viewModel.password,
                                 onValueChange = { viewModel.password = it },
-                                shape = RoundedCornerShape(dimensionResource(id = R.dimen.roundedCornerShape)),
+                                shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner_shape)),
                                 isError = errorMsg == R.string.FieldsNotFilled
                             )
                             Spacer(modifier = Modifier.height(20.dp))

@@ -18,9 +18,9 @@
     </fragment>
     <fragment
         android:id="@+id/friendsFragment"
-        android:name="com.vladima.socialhub.ui.main.friends.FriendsFragment"
+        android:name="com.vladima.socialhub.ui.main.top_posts.TopPostsFragment"
         android:label="fragment_friends"
-        tools:layout="@layout/fragment_friends" >
+        tools:layout="@layout/fragment_top_posts" >
         <action
             android:id="@+id/action_friendsFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />

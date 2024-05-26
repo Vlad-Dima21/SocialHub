@@ -85,7 +85,13 @@ dependencies {
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    implementation("androidx.hilt:hilt-navigation-fragment:1.2.0")
+    implementation(libs.androidx.hilt.navigation.fragment)
+
+
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    implementation(libs.glide)
 }
 
 kapt {
