@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/home"
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/baseline_home_24"/>
+    <item android:title="@string/friends"
+        android:id="@+id/friendsFragment"
+        android:icon="@drawable/baseline_people_24"/>
+    <item android:title="@string/settings"
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/baseline_settings_24"/>
+
+</menu>

@@ -28,7 +28,7 @@ class AuthViewModel: ViewModel() {
     var userName by mutableStateOf("")
     var password by mutableStateOf("")
 
-    var authenticationMethod by mutableStateOf(0)
+    var authenticationMethod by mutableStateOf(1)
 
     private val _errorMsg = MutableStateFlow<Int?>(null)
     val errorMsg = _errorMsg.asStateFlow()

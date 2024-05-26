@@ -1,5 +1,6 @@
-package com.vladima.socialhub.ui
+package com.vladima.socialhub.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -9,8 +10,12 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.vladima.socialhub.R
 import com.vladima.socialhub.databinding.ActivityMainBinding
+import com.vladima.socialhub.ui.auth.AuthActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,15 +30,8 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
-        }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
+        NavigationUI.setupWithNavController(binding.bottomNavigation, navHostFragment.navController)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

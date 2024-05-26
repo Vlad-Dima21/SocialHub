@@ -32,10 +32,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -47,7 +45,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
@@ -60,7 +57,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.vladima.socialhub.R
 import com.vladima.socialhub.models.User
-import com.vladima.socialhub.ui.MainActivity
+import com.vladima.socialhub.ui.main.MainActivity
 import com.vladima.socialhub.ui.auth.ui.theme.SocialHubTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,7 +70,6 @@ class AuthActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val auth = FirebaseAuth.getInstance()
-        auth.signOut()
         if (auth.currentUser != null) {
             startMainActivity()
         }

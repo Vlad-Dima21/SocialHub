@@ -7,8 +7,13 @@
     <string name="previous">Previous</string>
     <string name="title_activity_auth">AuthActivity</string>
 
-<!--    Google Cloud client string-->
+    <!--    Google Cloud client string-->
     <string name="web_client_id">164664133583-a9nt974m6esgmgndgmlsmg21h6hbj322.apps.googleusercontent.com</string>
+
+
+    <string name="home">Home</string>
+    <string name="friends">Friends</string>
+    <string name="settings">Settings</string>
 
     <string name="WrongEmail">Invalid email</string>
     <string name="FieldsNotFilled">Please fill required fields</string>
@@ -63,6 +68,8 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
