@@ -39,6 +39,17 @@ class MainActivity : AppCompatActivity() {
         //setup navigation component
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
         NavigationUI.setupWithNavController(binding.bottomNavigation, navHostFragment.navController)
+
+        navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
+            when(destination.id) {
+                R.id.homeFragment, R.id.topPostsFragment, R.id.settingsFragment -> {
+                    binding.bottomNavigation.visibility = android.view.View.VISIBLE
+                }
+                else -> {
+                    binding.bottomNavigation.visibility = android.view.View.GONE
+                }
+            }
+        }
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -5,7 +5,7 @@
         android:id="@+id/homeFragment"
         android:icon="@drawable/baseline_home_24"/>
     <item android:title="@string/friends"
-        android:id="@+id/friendsFragment"
+        android:id="@+id/topPostsFragment"
         android:icon="@drawable/baseline_people_24"/>
     <item android:title="@string/settings"
         android:id="@+id/settingsFragment"

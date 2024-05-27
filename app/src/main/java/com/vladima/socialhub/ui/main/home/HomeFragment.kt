@@ -84,6 +84,10 @@ class HomeFragment : Fragment() {
             }
         })
 
+        binding!!.addPost.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToNewPostFragment())
+        }
+
         binding!!.swipeRefresh.setOnRefreshListener {
             binding!!.search.setQuery("", false)
             viewModel.loadCurrentUserPosts()

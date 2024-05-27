@@ -11,13 +11,16 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_friendsFragment"
-            app:destination="@id/friendsFragment" />
+            app:destination="@id/topPostsFragment" />
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_newPostFragment"
+            app:destination="@id/newPostFragment" />
     </fragment>
     <fragment
-        android:id="@+id/friendsFragment"
+        android:id="@+id/topPostsFragment"
         android:name="com.vladima.socialhub.ui.main.top_posts.TopPostsFragment"
         android:label="fragment_friends"
         tools:layout="@layout/fragment_top_posts" >
@@ -35,9 +38,18 @@
         tools:layout="@layout/fragment_settings" >
         <action
             android:id="@+id/action_settingsFragment_to_friendsFragment"
-            app:destination="@id/friendsFragment" />
+            app:destination="@id/topPostsFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newPostFragment"
+        android:name="com.vladima.socialhub.ui.main.new_post.NewPostFragment"
+        android:label="fragment_new_post"
+        tools:layout="@layout/fragment_new_post" >
+        <action
+            android:id="@+id/action_newPostFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 </navigation>
