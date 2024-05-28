@@ -4,6 +4,6 @@ import android.graphics.Bitmap
 
 data class RVUserPost(
     var fileName: String = "",
-    var imageBitmap: Bitmap,
+    var imageUrl: String = "",
     var imageDescription: String = ""
 )

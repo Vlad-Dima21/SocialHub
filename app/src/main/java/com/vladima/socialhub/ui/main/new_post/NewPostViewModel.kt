@@ -18,6 +18,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.vladima.socialhub.R
 import com.vladima.socialhub.models.FirestoreUserPost
+import com.vladima.socialhub.utils.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -96,7 +97,11 @@ class NewPostViewModel @Inject constructor(
     }
 
     private fun compressFileAndGetUri(file: File): Uri {
-        val bitmap = BitmapFactory.decodeFile(file.path)
+        var bitmap = BitmapFactory.decodeFile(file.path)
+
+        // Images are rotated -90f degrees when uploaded to Firebase Storage
+        bitmap = Utils.rotateImage(bitmap, 90f)
+
         val byteStream = ByteArrayOutputStream()
 
         bitmap.compress(Bitmap.CompressFormat.JPEG, JPEG_QUALITY, byteStream)

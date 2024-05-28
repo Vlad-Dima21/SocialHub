@@ -35,8 +35,6 @@ class HomeFragmentViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    private val tempFiles = mutableListOf<File>()
-
     private val userPostsCollection = Firebase.firestore.collection("userPosts")
 
     init {
@@ -56,15 +54,9 @@ class HomeFragmentViewModel @Inject constructor(
         imageRefs.items.forEach{ storageReference ->
             jobs.add(
                 launch(Dispatchers.IO){
-                    val localFile = File.createTempFile(storageReference.name, "jpg")
-                    tempFiles.add(localFile)
-                    storageReference.getFile(localFile).await()
-                    val fbBitmap = BitmapFactory.decodeFile(localFile.absolutePath)
-
-                    // for some reason, high quality images lag the recycler view, so used memory needs to be reduced
-                    val bitmap = Bitmap.createScaledBitmap(fbBitmap, fbBitmap.width / 2, fbBitmap.height / 2, false)
+                    val imageUrl = storageReference.downloadUrl.await().toString()
                     posts.add(RVUserPost(storageReference.name,
-                        bitmap, firestoreUserPosts.find { it.fileName == storageReference.name }?.description ?: storageReference.name))
+                        imageUrl, firestoreUserPosts.find { it.fileName == storageReference.name }?.description ?: storageReference.name))
                 }
             )
         }
@@ -73,7 +65,6 @@ class HomeFragmentViewModel @Inject constructor(
         _userPosts = posts.sortedByDescending { firestoreUserPosts.find { it2 -> it2.fileName == it.fileName }?.createDate }
         _filteredPosts.emit(_userPosts)
         _isLoading.emit(false)
-        clearCache()
     }
 
     private var filterJob: Job? = null
@@ -92,8 +83,4 @@ class HomeFragmentViewModel @Inject constructor(
             )
         }
     }
-
-    private fun clearCache() = tempFiles.forEach {
-            it.delete()
-        }
 }

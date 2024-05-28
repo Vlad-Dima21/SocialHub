@@ -3,6 +3,7 @@ package com.vladima.socialhub.ui.main.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.vladima.socialhub.databinding.HomeImageViewholderBinding
 
 class HomeRVAdapter(
@@ -21,7 +22,9 @@ class HomeRVAdapter(
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         with(holder) {
             with(posts[position]) {
-                binding.imageView.setImageBitmap(imageBitmap)
+                Glide.with(binding.root)
+                    .load(imageUrl)
+                    .into(binding.imageView)
                 binding.imageDescription.text = imageDescription
             }
         }
