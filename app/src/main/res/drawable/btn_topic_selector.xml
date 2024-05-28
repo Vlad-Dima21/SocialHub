@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- When the button is selected -->
     <item android:state_selected="true">
         <shape android:shape="rectangle">
-            <solid android:color="?colorOnSurfaceVariant" />
+            <solid android:color="?colorSurfaceInverse" />
             <corners android:radius="10dp" />
-            <stroke android:color="?attr/colorOnPrimary" android:width="2dp" />
+            <stroke android:color="?attr/colorOnSurface" android:width="2dp" />
         </shape>
     </item>
 
-    <!-- Default state -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="?attr/colorSurface" />
+            <solid android:color="?colorSurface" />
             <corners android:radius="10dp" />
             <stroke android:color="?attr/colorOnPrimary" android:width="2dp" />
         </shape>

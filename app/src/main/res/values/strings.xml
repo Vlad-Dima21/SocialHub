@@ -45,6 +45,8 @@
     <string name="please_enter_a_description_first">Please enter a description first</string>
     <string name="post_success">Post created</string>
     <string name="post_error">There was an error creating the post</string>
+    <string name="add_to_favorites">Add to favorites</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
 
 
 </resources>

@@ -1,6 +1,7 @@
 package com.vladima.socialhub.ui.main.top_posts
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,18 +26,34 @@ class TopPostsFragmentViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+    private val sharedPreferences = app.getSharedPreferences("SocialHub.TopPosts", Context.MODE_PRIVATE)
+
     val topics = UnsplashTopic.getTopics()
-    private val _selectedTopics = HashSet<UnsplashTopic>()
+    private val _selectedTopics = HashSet<UnsplashTopic>(
+        sharedPreferences.getString("selectedTopics", null)?.let { stringTopics ->
+            if (stringTopics.isEmpty()) return@let null
+            else {
+                stringTopics.split(",").map { UnsplashTopic.getTopicById(it) }.toHashSet()
+            }
+        }
+        ?: HashSet()
+    )
     val selectedTopics get() = _selectedTopics.toSet()
     fun toggleTopic(topic: UnsplashTopic) {
+        val editor = sharedPreferences.edit()
+
         if (_selectedTopics.contains(topic)) {
             _selectedTopics.remove(topic)
         } else {
             _selectedTopics.add(topic)
         }
+
+        editor.putString("selectedTopics", _selectedTopics.joinToString(",", transform = { it.topicId }))
+        editor.apply()
     }
 
     init {
+
         loadTopPosts()
     }
 

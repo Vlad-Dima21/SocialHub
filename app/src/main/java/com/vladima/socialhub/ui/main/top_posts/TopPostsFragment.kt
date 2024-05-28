@@ -7,11 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.view.marginBottom
-import androidx.core.view.marginTop
 import androidx.core.view.setMargins
 import androidx.core.view.setPadding
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
@@ -65,9 +62,10 @@ class TopPostsFragment : Fragment() {
                         }
                         setPadding(context.resources.getDimension(R.dimen.card_spacing_small).toInt())
                     }
-                    background = AppCompatResources.getDrawable(context, R.drawable.btn_selector)
+                    background = AppCompatResources.getDrawable(context, R.drawable.btn_topic_selector)
                     setTextColor(AppCompatResources.getColorStateList(context, R.color.txt_selector))
                     isSelected = viewModel.selectedTopics.contains(topic)
+                    isAllCaps = false
                 }
                 button.text = topic.topicName
                 button.tag = topic.topicId

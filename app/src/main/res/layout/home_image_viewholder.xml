@@ -48,14 +48,25 @@
                 android:layout_marginBottom="@dimen/card_spacing"
                 android:background="?attr/colorSurface"
                 android:text="TextView"
-                android:textSize="24sp"
-                android:drawableStart="@drawable/baseline_textsms_24"
+                android:textSize="16sp"
                 android:maxLines="2"
                 android:ellipsize="end"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/favoriteToggle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+            <com.vladima.socialhub.ui.components.FavoriteToggle
+                android:id="@+id/favoriteToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageDescription"
+                android:layout_marginHorizontal="@dimen/card_spacing"
+                android:layout_marginBottom="@dimen/card_spacing"
+            />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
