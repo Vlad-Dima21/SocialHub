@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 class NewPostFragment : Fragment() {
 
     private var binding: FragmentNewPostBinding? = null
-    private lateinit var viewModel: NewPostViewModel
+    private val viewModel: NewPostViewModel by hiltNavGraphViewModels(R.id.nav_graph)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,8 +39,6 @@ class NewPostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel =  hiltNavGraphViewModels<NewPostViewModel>(R.id.nav_graph).value
 
         binding!!.newPostImage.setOnClickListener {
             capturePhoto()
@@ -55,7 +53,7 @@ class NewPostFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.postCreated.collect { postCreated ->
                 if (postCreated) {
-                    popBackStack()
+                    findNavController().popBackStack()
                 }
             }
         }
@@ -74,10 +72,10 @@ class NewPostFragment : Fragment() {
             }
         }
 
-        if (viewModel.capturedPhoto.value) {
-            binding!!.newPostImage.setImageURI(viewModel.imageFile!!.toUri())
-        } else {
+        if (!viewModel.capturedPhoto) {
             capturePhoto()
+        } else {
+            binding!!.newPostImage.setImageURI(viewModel.imageFile!!.toUri())
         }
     }
 
@@ -99,22 +97,16 @@ class NewPostFragment : Fragment() {
     ) { result ->
         with(result) {
             if (resultCode == AppCompatActivity.RESULT_OK) {
-                viewModel.markAsCaptured()
+                viewModel.capturedPhoto = true
                 binding!!.newPostImage.setImageURI(viewModel.imageFile!!.toUri())
-            } else if (resultCode == AppCompatActivity.RESULT_CANCELED && !viewModel.capturedPhoto.value) {
-                popBackStack()
+            } else if (resultCode == AppCompatActivity.RESULT_CANCELED && !viewModel.capturedPhoto) {
+                findNavController().popBackStack()
             }
         }
     }
 
-    private fun popBackStack() {
-        viewModel.clearFields()
-        findNavController().popBackStack()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.clearFields()
         binding = null
     }
 }

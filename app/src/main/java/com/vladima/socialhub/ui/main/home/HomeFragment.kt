@@ -57,11 +57,11 @@ class HomeFragment : Fragment() {
             viewModel.isLoading.collect { isLoading ->
                 if (isLoading) {
                     // keep the swipe refresh layout spinner on screen
-                    with(binding!!) {
+                    binding?.apply {
                         swipeRefresh.isRefreshing = true
                     }
                 } else {
-                    with(binding!!) {
+                    binding?.apply {
                         swipeRefresh.isRefreshing = false
                         if (posts.isEmpty()) {
                             noPosts.visibility = View.VISIBLE

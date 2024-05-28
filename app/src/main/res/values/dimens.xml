@@ -1,6 +1,9 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="rounded_corner_shape">16dp</dimen>
+    <dimen name="rounded_corner_shape_small">8dp</dimen>
+    <dimen name="card_spacing_small">6dp</dimen>
     <dimen name="card_spacing">12dp</dimen>
+    <dimen name="card_spacing_large">20dp</dimen>
     <dimen name="sep_horizontal">2dp</dimen>
 </resources>

@@ -42,9 +42,7 @@ class NewPostViewModel @Inject constructor(
     private val userPostCollection = Firebase.firestore.collection("userPosts")
 
     var imageFile: File? = null
-    private val _capturedPhoto = MutableStateFlow(false)
-    val capturedPhoto = _capturedPhoto.asStateFlow()
-    val markAsCaptured: () -> Unit = { _capturedPhoto.value = true }
+    var capturedPhoto = false
 
     private val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss")
     val storageRef: (String) -> StorageReference = { dateString ->
@@ -114,10 +112,11 @@ class NewPostViewModel @Inject constructor(
         return Uri.fromFile(file)
     }
 
-    fun clearFields() {
+    override fun onCleared() {
+        super.onCleared()
         imageFile?.delete()
         imageFile = null
-        _capturedPhoto.value = false
+        capturedPhoto = false
         _helperMessage.value = null
         _postCreated.value = false
         _isLoading.value = false

@@ -16,4 +16,12 @@ interface UnsplashAPI {
         @Query("page") page: Int = 1,
         @Query("per_page") perPage: Int = 20
     ): Response<List<UnsplashPost>>
+
+    @GET("photos/random")
+    @Headers("Accept-Version: v1")
+    suspend fun getPostsByTopic(
+        @Query("topics") topics: String? = null,
+        @Query("count") count: Int = 20,
+        @Query("client_id") clientId: String = CLIENT,
+    ): Response<List<UnsplashPost>>
 }

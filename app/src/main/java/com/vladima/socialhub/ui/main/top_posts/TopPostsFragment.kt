@@ -5,7 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
+import androidx.core.view.setMargins
+import androidx.core.view.setPadding
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +43,42 @@ class TopPostsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val viewModel: TopPostsFragmentViewModel by hiltNavGraphViewModels(R.id.nav_graph)
+
+
+        binding!!.swipeRefresh.setOnRefreshListener {
+            viewModel.loadTopPosts()
+        }
+
+        (binding?.topicsLayout)?.let {
+            viewModel.topics.forEachIndexed { index, topic ->
+                val button = Button(requireContext()).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        setMargins(
+                            context.resources.getDimension(R.dimen.card_spacing_small).toInt(),
+                        )
+                        marginStart = context.resources.getDimension(R.dimen.card_spacing_small).toInt()
+                        if (index == viewModel.topics.size - 1) {
+                            marginEnd = context.resources.getDimension(R.dimen.card_spacing_small).toInt()
+                        }
+                        setPadding(context.resources.getDimension(R.dimen.card_spacing_small).toInt())
+                    }
+                    background = AppCompatResources.getDrawable(context, R.drawable.btn_selector)
+                    setTextColor(AppCompatResources.getColorStateList(context, R.color.txt_selector))
+                    isSelected = viewModel.selectedTopics.contains(topic)
+                }
+                button.text = topic.topicName
+                button.tag = topic.topicId
+                button.setOnClickListener {
+                    viewModel.toggleTopic(topic)
+                    button.isSelected = !button.isSelected
+                    viewModel.loadTopPosts()
+                }
+                it.addView(button)
+            }
+        }
 
         with(binding!!.rvPosts) {
             addItemDecoration(MarginItemDecoration(80))
