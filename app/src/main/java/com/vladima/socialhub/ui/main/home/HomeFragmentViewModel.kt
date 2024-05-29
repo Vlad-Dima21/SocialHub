@@ -1,15 +1,17 @@
 package com.vladima.socialhub.ui.main.home
 
 import android.app.Application
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.vladima.socialhub.database.AppDatabase
+import com.vladima.socialhub.database.Post
 import com.vladima.socialhub.models.FirestoreUserPost
+import com.vladima.socialhub.models.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,7 +20,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,7 +36,10 @@ class HomeFragmentViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+    private val usersCollection = Firebase.firestore.collection("users")
     private val userPostsCollection = Firebase.firestore.collection("userPosts")
+
+    private val postsDao by lazy { AppDatabase.getDatabase(app).postDao() }
 
     init {
         loadCurrentUserPosts()
@@ -45,7 +49,7 @@ class HomeFragmentViewModel @Inject constructor(
         _isLoading.emit(true)
 
         val firestoreUserPosts = userPostsCollection.whereEqualTo("userUID", currentUser.uid).get().await().documents.map {
-            it.toObject(FirestoreUserPost::class.java)!!
+            it.toObject(FirestoreUserPost::class.java)!!.apply { postId = it.id }
         }
 
         val imageRefs = storageRef.listAll().await()
@@ -54,9 +58,10 @@ class HomeFragmentViewModel @Inject constructor(
         imageRefs.items.forEach{ storageReference ->
             jobs.add(
                 launch(Dispatchers.IO){
+                    val post = firestoreUserPosts.find { it.fileName == storageReference.name }
                     val imageUrl = storageReference.downloadUrl.await().toString()
-                    posts.add(RVUserPost(storageReference.name,
-                        imageUrl, firestoreUserPosts.find { it.fileName == storageReference.name }?.description ?: storageReference.name))
+                    posts.add(RVUserPost(post?.postId ?: "", storageReference.name,
+                        imageUrl, post?.description ?: storageReference.name))
                 }
             )
         }
@@ -81,6 +86,21 @@ class HomeFragmentViewModel @Inject constructor(
                     it.imageDescription.contains(query?.trim() ?: "", ignoreCase = true)
                 }
             )
+        }
+    }
+
+    fun onFavorite(rvPost: RVUserPost, isChecked: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            val completeUser = usersCollection.whereEqualTo("userUID", currentUser.uid).get()
+                .await().documents.first().toObject(User::class.java)!!
+            val userPost =
+                postsDao.getPostById(rvPost.postId) ?: Post(rvPost.postId, currentUser.uid, completeUser.userName, rvPost.imageDescription, rvPost.imageUrl)
+            when (isChecked) {
+                true -> postsDao.insertPost(userPost)
+                false -> postsDao.deletePost(userPost)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

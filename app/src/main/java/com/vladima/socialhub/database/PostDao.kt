@@ -12,12 +12,12 @@ interface PostDao {
     @Query("SELECT * FROM post")
     fun getAllPosts(): Flow<List<Post>>
 
-    @Query("SELECT * FROM post WHERE id = :id")
-    fun getPostById(id: Int): Flow<Post>
+    @Query("SELECT * FROM post WHERE postId = :id")
+    suspend fun getPostById(id: String): Post?
 
     @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
-    fun insertPost(post: Post)
+    suspend fun insertPost(post: Post)
 
     @Delete
-    fun deletePost(post: Post)
+    suspend fun deletePost(post: Post)
 }

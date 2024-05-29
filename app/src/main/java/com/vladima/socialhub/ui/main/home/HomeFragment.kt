@@ -22,7 +22,8 @@ class HomeFragment : Fragment() {
 
     private var binding: FragmentHomeBinding? = null
     private var posts = listOf<RVUserPost>()
-    private var postsAdapter = HomeRVAdapter(listOf())
+    private val viewModel: HomeFragmentViewModel by hiltNavGraphViewModels(R.id.nav_graph)
+    private lateinit var postsAdapter: HomeRVAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +39,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel: HomeFragmentViewModel by hiltNavGraphViewModels(R.id.nav_graph)
+        postsAdapter = HomeRVAdapter(posts, viewModel::onFavorite)
 
         with(binding!!.rvPosts) {
             addItemDecoration(MarginItemDecoration(80))

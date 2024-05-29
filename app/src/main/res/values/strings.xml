@@ -47,6 +47,7 @@
     <string name="post_error">There was an error creating the post</string>
     <string name="add_to_favorites">Add to favorites</string>
     <string name="remove_from_favorites">Remove from favorites</string>
+    <string name="favorite_posts_placeholder">Favorite posts will be shown here</string>
 
 
 </resources>

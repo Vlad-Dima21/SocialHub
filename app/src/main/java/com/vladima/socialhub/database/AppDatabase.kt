@@ -15,7 +15,7 @@ abstract class AppDatabase: RoomDatabase() {
         @Volatile
         private var instance: AppDatabase? = null
 
-        fun getInstance(context: Context): AppDatabase {
+        fun getDatabase(context: Context): AppDatabase {
             if (instance != null) {
                 return instance as AppDatabase
             }

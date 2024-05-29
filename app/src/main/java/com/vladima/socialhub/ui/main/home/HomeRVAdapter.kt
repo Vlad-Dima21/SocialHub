@@ -7,7 +7,8 @@ import com.bumptech.glide.Glide
 import com.vladima.socialhub.databinding.HomeImageViewholderBinding
 
 class HomeRVAdapter(
-    private var posts: List<RVUserPost>
+    private var posts: List<RVUserPost>,
+    private var onFavorite: (RVUserPost, Boolean) -> Unit
 ): RecyclerView.Adapter<HomeRVAdapter.ImageViewHolder>() {
 
     inner class ImageViewHolder(val binding: HomeImageViewholderBinding) : RecyclerView.ViewHolder(binding.root)
@@ -26,6 +27,10 @@ class HomeRVAdapter(
                     .load(imageUrl)
                     .into(binding.imageView)
                 binding.imageDescription.text = imageDescription
+
+                binding.favoriteToggle.setOnCheckedListener {
+                    onFavorite(this, it)
+                }
             }
         }
     }
