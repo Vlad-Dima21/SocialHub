@@ -15,15 +15,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vladima.socialhub.R
 import com.vladima.socialhub.databinding.FragmentHomeBinding
+import com.vladima.socialhub.ui.components.PostCard
+import com.vladima.socialhub.ui.components.PostRVAdapter
 import com.vladima.socialhub.ui.helpers.MarginItemDecoration
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
     private var binding: FragmentHomeBinding? = null
-    private var posts = listOf<RVUserPost>()
+    private var posts = listOf<PostCard>()
     private val viewModel: HomeFragmentViewModel by hiltNavGraphViewModels(R.id.nav_graph)
-    private lateinit var postsAdapter: HomeRVAdapter
+    private lateinit var postsAdapter: PostRVAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +41,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        postsAdapter = HomeRVAdapter(posts, viewModel::onFavorite)
+        postsAdapter = PostRVAdapter(posts, viewModel::onFavorite)
 
         with(binding!!.rvPosts) {
             addItemDecoration(MarginItemDecoration(80))

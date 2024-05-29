@@ -16,17 +16,26 @@ class FavoriteToggle @JvmOverloads constructor(
     private val toggleButton: ToggleButton by lazy { findViewById(R.id.toggle_btn) }
     private val rootLayout: ConstraintLayout by lazy { findViewById(R.id.root_layout) }
     private var onCheckedListener: ((Boolean) -> Unit)? = null
+    var isChecked: Boolean
+        get() = toggleButton.isChecked
+        set(value) {
+            toggleButton.isChecked = value
+            onChanged()
+        }
     init {
         inflate(context, R.layout.like_toggle, this)
         rootLayout.setOnClickListener {
             toggleButton.isChecked = !toggleButton.isChecked
             onCheckedListener?.invoke(toggleButton.isChecked)
+            onChanged()
+        }
+    }
 
-            toggleText.text = if (toggleButton.isChecked) {
-                context.getString(R.string.remove_from_favorites)
-            } else {
-                context.getString(R.string.add_to_favorites)
-            }
+    private fun onChanged() {
+        toggleText.text = if (toggleButton.isChecked) {
+            context.getString(R.string.remove_from_favorites)
+        } else {
+            context.getString(R.string.add_to_favorites)
         }
     }
 

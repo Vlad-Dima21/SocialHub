@@ -17,14 +17,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.vladima.socialhub.R
 import com.vladima.socialhub.databinding.FragmentTopPostsBinding
 import com.vladima.socialhub.models.UnsplashPost
+import com.vladima.socialhub.ui.components.PostCard
+import com.vladima.socialhub.ui.components.PostRVAdapter
 import com.vladima.socialhub.ui.helpers.MarginItemDecoration
 import kotlinx.coroutines.launch
 
 class TopPostsFragment : Fragment() {
 
     private var binding: FragmentTopPostsBinding? = null
-    private var posts = listOf<UnsplashPost>()
-    private var postsAdapter = TopPostsRVAdapter(listOf())
+    private var posts = listOf<PostCard>()
+    private lateinit var postsAdapter: PostRVAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,8 +41,9 @@ class TopPostsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel: TopPostsFragmentViewModel by hiltNavGraphViewModels(R.id.nav_graph)
 
+        val viewModel: TopPostsFragmentViewModel by hiltNavGraphViewModels(R.id.nav_graph)
+        postsAdapter = PostRVAdapter(posts, viewModel::onFavorite)
 
         binding!!.swipeRefresh.setOnRefreshListener {
             viewModel.loadTopPosts()

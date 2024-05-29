@@ -1,7 +1,7 @@
 package com.vladima.socialhub.ui.main.home
 
 import android.app.Application
-import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -12,12 +12,14 @@ import com.vladima.socialhub.database.AppDatabase
 import com.vladima.socialhub.database.Post
 import com.vladima.socialhub.models.FirestoreUserPost
 import com.vladima.socialhub.models.User
+import com.vladima.socialhub.ui.components.PostCard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -28,10 +30,21 @@ class HomeFragmentViewModel @Inject constructor(
 ): ViewModel(){
     private val currentUser = FirebaseAuth.getInstance().currentUser!!
     private val storageRef = FirebaseStorage.getInstance().reference.child(this.currentUser.uid)
+    private val postsDao by lazy { AppDatabase.getDatabase(app).postDao() }
 
     private var _userPosts = listOf<RVUserPost>()
     private val _filteredPosts = MutableStateFlow(listOf<RVUserPost>())
-    val userPosts = _filteredPosts.asStateFlow()
+    val userPosts = _filteredPosts.asStateFlow().combine(postsDao.getAllPosts()) { uPosts: List<RVUserPost>, dbPosts: List<Post> ->
+        uPosts.map { uPost ->
+            val isFavorite = dbPosts.any { it.postId == uPost.postId }
+            PostCard(
+                uPost.postId,
+                uPost.imageUrl,
+                uPost.imageDescription,
+                isFavorite
+            )
+        }
+    }
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -39,7 +52,6 @@ class HomeFragmentViewModel @Inject constructor(
     private val usersCollection = Firebase.firestore.collection("users")
     private val userPostsCollection = Firebase.firestore.collection("userPosts")
 
-    private val postsDao by lazy { AppDatabase.getDatabase(app).postDao() }
 
     init {
         loadCurrentUserPosts()
@@ -89,17 +101,18 @@ class HomeFragmentViewModel @Inject constructor(
         }
     }
 
-    fun onFavorite(rvPost: RVUserPost, isChecked: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+    fun onFavorite(post: PostCard, isChecked: Boolean) = viewModelScope.launch(Dispatchers.IO) {
         try {
             val completeUser = usersCollection.whereEqualTo("userUID", currentUser.uid).get()
                 .await().documents.first().toObject(User::class.java)!!
             val userPost =
-                postsDao.getPostById(rvPost.postId) ?: Post(rvPost.postId, currentUser.uid, completeUser.userName, rvPost.imageDescription, rvPost.imageUrl)
+                postsDao.getPostById(post.postId) ?: Post(post.postId, currentUser.uid, completeUser.userName, post.imageDescription, post.imageUrl)
             when (isChecked) {
                 true -> postsDao.insertPost(userPost)
                 false -> postsDao.deletePost(userPost)
             }
         } catch (e: Exception) {
+            Toast.makeText(app, "Error has occurred", Toast.LENGTH_SHORT).show()
             e.printStackTrace()
         }
     }
