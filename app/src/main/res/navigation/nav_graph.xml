@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_homeFragment_to_newPostFragment"
             app:destination="@id/newPostFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_favoritePostsFragment"
+            app:destination="@id/favoritePostsFragment" />
     </fragment>
     <fragment
         android:id="@+id/topPostsFragment"
@@ -30,6 +33,9 @@
         <action
             android:id="@+id/action_friendsFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_topPostsFragment_to_favoritePostsFragment"
+            app:destination="@id/favoritePostsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -42,6 +48,9 @@
         <action
             android:id="@+id/action_settingsFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_favoritePostsFragment"
+            app:destination="@id/favoritePostsFragment" />
     </fragment>
     <fragment
         android:id="@+id/newPostFragment"
@@ -50,6 +59,21 @@
         tools:layout="@layout/fragment_new_post" >
         <action
             android:id="@+id/action_newPostFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoritePostsFragment"
+        android:name="com.vladima.socialhub.ui.main.favorite_posts.FavoritePostsFragment"
+        android:label="fragment_favorite_posts"
+        tools:layout="@layout/fragment_favorite_posts" >
+        <action
+            android:id="@+id/action_favoritePostsFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_favoritePostsFragment_to_topPostsFragment"
+            app:destination="@id/topPostsFragment" />
+        <action
+            android:id="@+id/action_favoritePostsFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

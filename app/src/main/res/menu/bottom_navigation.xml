@@ -7,6 +7,10 @@
     <item android:title="@string/topPosts"
         android:id="@+id/topPostsFragment"
         android:icon="@drawable/baseline_people_24"/>
+    <item android:title="@string/favoritePosts"
+        android:id="@+id/favoritePostsFragment"
+        android:icon="@drawable/baseline_favorite_black_24"
+        />
     <item android:title="@string/settings"
         android:id="@+id/settingsFragment"
         android:icon="@drawable/baseline_settings_24"/>

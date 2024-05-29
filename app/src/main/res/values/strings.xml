@@ -50,6 +50,10 @@
     <string name="favorite_posts_placeholder">Favorite posts will be shown here</string>
     <string name="no_description">No description</string>
     <string name="unknown">Unknown</string>
+    <string name="favorite_posts">Favorite Posts</string>
+    <string name="post_removed_snackbar">Post removed from favorites</string>
+    <string name="undo">Undo</string>
+    <string name="favoritePosts">Favorite posts</string>
 
 
 </resources>

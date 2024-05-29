@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {
-                R.id.homeFragment, R.id.topPostsFragment, R.id.settingsFragment -> {
+                R.id.homeFragment, R.id.topPostsFragment, R.id.settingsFragment, R.id.favoritePostsFragment -> {
                     binding.bottomNavigation.visibility = android.view.View.VISIBLE
                 }
                 else -> {

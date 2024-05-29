@@ -12,6 +12,9 @@ interface PostDao {
     @Query("SELECT * FROM post")
     fun getAllPosts(): Flow<List<Post>>
 
+    @Query("SELECT * FROM post WHERE ownerId = :userUID")
+    fun getUserFavorites(userUID: String): Flow<List<Post>>
+
     @Query("SELECT * FROM post WHERE postId = :id")
     suspend fun getPostById(id: String): Post?
 
