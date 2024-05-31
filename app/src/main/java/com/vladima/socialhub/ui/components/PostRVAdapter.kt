@@ -27,6 +27,9 @@ class PostRVAdapter(
                     .load(imageUrl)
                     .into(binding.imageView)
                 binding.authorName.text = imageAuthorName
+                if (imageAuthorName.isNullOrEmpty()) {
+                    binding.authorName.visibility = android.view.View.GONE
+                }
                 binding.imageDescription.text = imageDescription
                 binding.favoriteToggle.setOnCheckedListener {
                     onFavorite(this, it)

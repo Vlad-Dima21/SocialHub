@@ -12,17 +12,21 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.setMargins
 import androidx.core.view.setPadding
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vladima.socialhub.R
 import com.vladima.socialhub.databinding.FragmentTopPostsBinding
 import com.vladima.socialhub.models.UnsplashPost
 import com.vladima.socialhub.ui.components.PostCard
 import com.vladima.socialhub.ui.components.PostRVAdapter
+import com.vladima.socialhub.ui.helpers.BaseFragment
 import com.vladima.socialhub.ui.helpers.MarginItemDecoration
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class TopPostsFragment : Fragment() {
+class TopPostsFragment: BaseFragment() {
 
     private var binding: FragmentTopPostsBinding? = null
     private var posts = listOf<PostCard>()
@@ -87,15 +91,21 @@ class TopPostsFragment : Fragment() {
             adapter = postsAdapter
         }
 
-        lifecycleScope.launch {
+        repeatOnLifecycleStarted {
             viewModel.topPosts.collect { list ->
                 posts = list
                 postsAdapter.setNewPosts(posts)
+                with(binding!!) {
+                    if (posts.isEmpty()) {
+                        noPosts.visibility = View.VISIBLE
+                    } else {
+                        noPosts.visibility = View.GONE
+                    }
+                }
             }
         }
 
-
-        lifecycleScope.launch {
+        repeatOnLifecycleStarted {
             viewModel.isLoading.collect { isLoading ->
                 if (isLoading) {
                     // keep the swipe refresh layout spinner on screen

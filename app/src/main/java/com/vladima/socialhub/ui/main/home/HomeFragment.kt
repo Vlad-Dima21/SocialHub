@@ -17,10 +17,11 @@ import com.vladima.socialhub.R
 import com.vladima.socialhub.databinding.FragmentHomeBinding
 import com.vladima.socialhub.ui.components.PostCard
 import com.vladima.socialhub.ui.components.PostRVAdapter
+import com.vladima.socialhub.ui.helpers.BaseFragment
 import com.vladima.socialhub.ui.helpers.MarginItemDecoration
 import kotlinx.coroutines.launch
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment() {
 
     private var binding: FragmentHomeBinding? = null
     private var posts = listOf<PostCard>()
@@ -49,14 +50,14 @@ class HomeFragment : Fragment() {
             adapter = postsAdapter
         }
 
-        lifecycleScope.launch {
+        repeatOnLifecycleStarted {
             viewModel.userPosts.collect { list ->
                 posts = list
                 postsAdapter.setNewPosts(posts)
             }
         }
 
-        lifecycleScope.launch {
+        repeatOnLifecycleStarted {
             viewModel.isLoading.collect { isLoading ->
                 if (isLoading) {
                     // keep the swipe refresh layout spinner on screen
