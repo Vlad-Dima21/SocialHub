@@ -17,6 +17,7 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.vladima.socialhub.R
 import com.vladima.socialhub.databinding.FragmentNewPostBinding
@@ -27,6 +28,7 @@ class NewPostFragment : Fragment() {
 
     private var binding: FragmentNewPostBinding? = null
     private val viewModel: NewPostViewModel by hiltNavGraphViewModels(R.id.nav_graph)
+    private var isLoading = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +43,9 @@ class NewPostFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding!!.newPostImage.setOnClickListener {
-            capturePhoto()
+            if (!isLoading) {
+                capturePhoto()
+            }
         }
 
         binding!!.createPostBtn.setOnClickListener {
@@ -53,7 +57,11 @@ class NewPostFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.postCreated.collect { postCreated ->
                 if (postCreated) {
-                    findNavController().popBackStack()
+                    findNavController().navigate(
+                        R.id.action_newPostFragment_to_homeFragment,
+                        Bundle().apply { putBoolean("home_refresh", true) },
+                        NavOptions.Builder().setPopUpTo(R.id.homeFragment, true).build()
+                    )
                 }
             }
         }
@@ -66,6 +74,7 @@ class NewPostFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.isLoading.collect { isLoading ->
+                this@NewPostFragment.isLoading = isLoading
                 binding!!.description.isEnabled = !isLoading
                 binding!!.createPostBtn.isEnabled = !isLoading
                 binding!!.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

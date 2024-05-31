@@ -42,6 +42,17 @@ class HomeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        arguments?.apply {
+            getBoolean("home_refresh", false).let {
+                if (it) {
+                    lifecycleScope.launch {
+                        viewModel.loadCurrentUserPosts()
+                    }
+                }
+            }
+            remove("home_refresh")
+        }
+
         postsAdapter = PostRVAdapter(posts, viewModel::onFavorite)
 
         with(binding!!.rvPosts) {

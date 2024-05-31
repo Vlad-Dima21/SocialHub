@@ -170,13 +170,13 @@ class AuthActivity : ComponentActivity() {
                                         modifier = Modifier.padding(ButtonDefaults.IconSpacing)
                                     )
                                 }
-                                Button(onClick = ::loginGoogle, modifier = Modifier.weight(0.5f)) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.google),
-                                        contentDescription = null,
-                                        modifier = Modifier.padding(ButtonDefaults.IconSpacing)
-                                    )
-                                }
+//                                Button(onClick = ::loginGoogle, modifier = Modifier.weight(0.5f)) {
+//                                    Icon(
+//                                        painter = painterResource(id = R.drawable.google),
+//                                        contentDescription = null,
+//                                        modifier = Modifier.padding(ButtonDefaults.IconSpacing)
+//                                    )
+//                                }
                             }
                             Row {
                                 Text(
@@ -255,14 +255,14 @@ class AuthActivity : ComponentActivity() {
                                         modifier = Modifier.padding(ButtonDefaults.IconSpacing)
                                     )
                                 }
-                                Button(onClick = ::loginGoogle, modifier = Modifier.weight(0.5f)) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.google),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .padding(ButtonDefaults.IconSpacing)
-                                    )
-                                }
+//                                Button(onClick = ::loginGoogle, modifier = Modifier.weight(0.5f)) {
+//                                    Icon(
+//                                        painter = painterResource(id = R.drawable.google),
+//                                        contentDescription = null,
+//                                        modifier = Modifier
+//                                            .padding(ButtonDefaults.IconSpacing)
+//                                    )
+//                                }
                             }
                             Row {
                                 Text(

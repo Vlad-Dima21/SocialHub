@@ -73,15 +73,16 @@ class NewPostViewModel @Inject constructor(
                 .addOnSuccessListener {
                     userPostCollection.add(
                         FirestoreUserPost(
-                            fileName,
-                            currentUser.uid,
-                            description
+                            fileName = fileName,
+                            userUID = currentUser.uid,
+                            description =  description
                         )
                     )
                     imageFile!!.delete()
                     Toast.makeText(app, app.getString(R.string.post_success), Toast.LENGTH_SHORT).show()
                     _isLoading.value = false
                     _postCreated.value = true
+                    resetFields()
                 }
                 .addOnFailureListener {
                     Log.e("NewPostViewModel", "Error uploading image: ${it.message}")
@@ -117,13 +118,17 @@ class NewPostViewModel @Inject constructor(
         return Uri.fromFile(file)
     }
 
-    override fun onCleared() {
-        super.onCleared()
+    private fun resetFields() {
         imageFile?.delete()
         imageFile = null
         capturedPhoto = false
         _helperMessage.value = null
         _postCreated.value = false
         _isLoading.value = false
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        resetFields()
     }
 }
