@@ -23,6 +23,7 @@ class FavoritePostsFragment : Fragment() {
     private val viewModel: FavoritePostsViewModel by hiltNavGraphViewModels(R.id.nav_graph)
     private var posts = listOf<PostCard>()
     private lateinit var postsAdapter: PostRVAdapter
+    private var deleteSnackbar: Snackbar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,15 +31,33 @@ class FavoritePostsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFavoritePostsBinding.inflate(inflater, container, false)
-        (activity as AppCompatActivity).supportActionBar?.show()
-        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.favorite_posts)
+        binding.toolbar.title = getString(R.string.favorite_posts)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        postsAdapter = PostRVAdapter(posts, viewModel::onMarkForRemoval)
+        postsAdapter = PostRVAdapter(posts) { postCard, _ ->
+            deleteSnackbar?.dismiss()
+            viewModel.onMarkForRemoval(postCard, true)
+            Snackbar.make(
+                binding.rvFavoritePosts,
+                getString(R.string.post_removed_snackbar), Snackbar.LENGTH_SHORT
+            )
+                .setAction(getString(R.string.undo)
+                ) { viewModel.onAddBackToFavorites(postCard) }
+                .addCallback(object : Snackbar.Callback() {
+                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                        if (event != DISMISS_EVENT_ACTION) {
+                            viewModel.onDeletePost(postCard)
+                        }
+                    }
+                }).let {
+                    deleteSnackbar = it
+                    it.show()
+                }
+        }
 
         with(binding.rvFavoritePosts) {
             addItemDecoration(MarginItemDecoration(80))
@@ -51,27 +70,6 @@ class FavoritePostsFragment : Fragment() {
                 this@FavoritePostsFragment.posts = posts
                 postsAdapter.setNewPosts(posts)
                 binding.noFavoritePosts.visibility = if(posts.isEmpty()) View.VISIBLE else View.GONE
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.postMarkedToBeDeleted.collect { post ->
-                if (post != null) {
-                    Snackbar.make(
-                        binding.rvFavoritePosts,
-                        getString(R.string.post_removed_snackbar), Snackbar.LENGTH_SHORT
-                    )
-                        .setAction(getString(R.string.undo)
-                        ) { viewModel.onAddBackToFavorites(post) }
-                        .addCallback(object : Snackbar.Callback() {
-                            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                                if (event != DISMISS_EVENT_ACTION) {
-                                    viewModel.onDeletePost(post)
-                                }
-                            }
-                        })
-                        .show()
-                }
             }
         }
     }

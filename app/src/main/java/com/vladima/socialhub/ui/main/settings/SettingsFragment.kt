@@ -24,12 +24,9 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSettingsBinding.inflate(layoutInflater)
-        (activity as AppCompatActivity).supportActionBar?.let {
-            it.show()
-            it.title = getString(R.string.settings)
-        }
+        binding!!.toolbar.title = getString(R.string.settings)
         return binding!!.root
     }
 

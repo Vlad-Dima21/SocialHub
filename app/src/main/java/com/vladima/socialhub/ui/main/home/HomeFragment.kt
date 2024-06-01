@@ -34,8 +34,6 @@ class HomeFragment : BaseFragment() {
     ): View {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        (activity as AppCompatActivity).supportActionBar?.hide()
-
         return binding!!.root
     }
 
