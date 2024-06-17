@@ -29,6 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Login
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -39,7 +40,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -96,6 +96,7 @@ class AuthActivity : ComponentActivity() {
         setContent {
             SocialHubTheme {
                 val errorMsg by viewModel.errorMsg.collectAsState()
+                val isLoading by viewModel.isLoading.collectAsState()
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -158,7 +159,7 @@ class AuthActivity : ComponentActivity() {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                Button(onClick = viewModel::signUp, modifier = Modifier.weight(1f)) {
+                                Button(onClick = viewModel::signUp, modifier = Modifier.weight(1f), enabled = !isLoading) {
                                     Icon(
                                         imageVector = Icons.Filled.Login,
                                         contentDescription = null,
@@ -169,6 +170,11 @@ class AuthActivity : ComponentActivity() {
                                         fontSize = 24.sp,
                                         modifier = Modifier.padding(ButtonDefaults.IconSpacing)
                                     )
+                                    if (isLoading) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.padding(ButtonDefaults.IconSpacing)
+                                        )
+                                    }
                                 }
 //                                Button(onClick = ::loginGoogle, modifier = Modifier.weight(0.5f)) {
 //                                    Icon(
@@ -190,8 +196,8 @@ class AuthActivity : ComponentActivity() {
                                         userName = ""
                                         password = ""
                                     }
-                                    viewModel.authenticationMethod = 1
-                                }) {
+                                    viewModel.setAuthMethod(1)
+                                }, enabled = !isLoading) {
                                     Text(getString(R.string.login_instead))
                                 }
                             }
@@ -243,7 +249,7 @@ class AuthActivity : ComponentActivity() {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                Button(onClick = viewModel::logIn, modifier = Modifier.weight(1f)) {
+                                Button(onClick = viewModel::logIn, modifier = Modifier.weight(1f), enabled = !isLoading) {
                                     Icon(
                                         imageVector = Icons.Filled.Login,
                                         contentDescription = null,
@@ -254,6 +260,11 @@ class AuthActivity : ComponentActivity() {
                                         fontSize = 24.sp,
                                         modifier = Modifier.padding(ButtonDefaults.IconSpacing)
                                     )
+                                    if (isLoading) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.padding(ButtonDefaults.IconSpacing)
+                                        )
+                                    }
                                 }
 //                                Button(onClick = ::loginGoogle, modifier = Modifier.weight(0.5f)) {
 //                                    Icon(
@@ -276,8 +287,8 @@ class AuthActivity : ComponentActivity() {
                                         userName = ""
                                         password = ""
                                     }
-                                    viewModel.authenticationMethod = 0
-                                }) {
+                                    viewModel.setAuthMethod(0)
+                                }, enabled = !isLoading) {
                                     Text(getString(R.string.sign_up_instead))
                                 }
                             }

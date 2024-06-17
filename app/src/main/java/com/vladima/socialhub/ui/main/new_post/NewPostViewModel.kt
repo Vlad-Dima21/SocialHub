@@ -8,6 +8,7 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -99,9 +100,19 @@ class NewPostViewModel @Inject constructor(
 
     private fun compressFileAndGetUri(file: File): Uri {
         var bitmap = BitmapFactory.decodeFile(file.path)
+        val exif = ExifInterface(file.path)
 
-        // Images are rotated -90f degrees when uploaded to Firebase Storage
-        bitmap = Utils.rotateImage(bitmap, 90f)
+//        https://stackoverflow.com/questions/12726860/android-how-to-detect-the-image-orientation-portrait-or-landscape-picked-fro
+//        Get correct orientation of image before uploading
+        val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+
+        val rotation = when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> 90f
+            ExifInterface.ORIENTATION_ROTATE_180 -> 180f
+            ExifInterface.ORIENTATION_ROTATE_270 -> 270f
+            else -> 0f
+        }
+        bitmap = Utils.rotateImage(bitmap, rotation)
 
         val byteStream = ByteArrayOutputStream()
 

@@ -2,9 +2,11 @@ package com.vladima.socialhub.ui.auth
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -28,12 +30,21 @@ class AuthViewModel: ViewModel() {
     var userName by mutableStateOf("")
     var password by mutableStateOf("")
 
-    var authenticationMethod by mutableStateOf(1)
+    var authenticationMethod by mutableIntStateOf(1)
+        private set
+
+    fun setAuthMethod(method: Int) {
+        authenticationMethod = method
+        _errorMsg.value = null
+    }
 
     private val _errorMsg = MutableStateFlow<Int?>(null)
     val errorMsg = _errorMsg.asStateFlow()
     private val _isSuccess = MutableStateFlow(false)
     val isSuccess = _isSuccess.asStateFlow()
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
 
     private val emailRegex = Regex("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}\$")
 
@@ -45,19 +56,19 @@ class AuthViewModel: ViewModel() {
     private val fieldsValidation
         get() = when (authenticationMethod) {
             0 -> {
-                if (!emailRegex.matches(email)) {
-                    Validations.WrongEmail
-                } else if (email.isEmpty() || password.isEmpty() || userName.isEmpty()) {
+                if (email.isEmpty() || password.isEmpty() || userName.isEmpty()) {
                     Validations.FieldsNotFilled
+                }else if (!emailRegex.matches(email)) {
+                    Validations.WrongEmail
                 } else {
                     null
                 }
             }
             else -> {
-                if (!emailRegex.matches(email)) {
-                    Validations.WrongEmail
-                } else if (email.isEmpty() || password.isEmpty()) {
+                if (email.isEmpty() || password.isEmpty()) {
                     Validations.FieldsNotFilled
+                } else if (!emailRegex.matches(email)) {
+                    Validations.WrongEmail
                 } else {
                     null
                 }
@@ -65,7 +76,7 @@ class AuthViewModel: ViewModel() {
         }
 
 
-    fun signUp() = CoroutineScope(Dispatchers.IO).launch {
+    fun signUp() = viewModelScope.launch(Dispatchers.IO) {
         when(fieldsValidation) {
             Validations.WrongEmail -> {
                 updateMessage(R.string.WrongEmail)
@@ -78,6 +89,7 @@ class AuthViewModel: ViewModel() {
             else -> {}
         }
         try {
+            _isLoading.value = true
             auth.createUserWithEmailAndPassword(email, password).await()
         } catch (e: FirebaseAuthUserCollisionException) {
             updateMessage(R.string.EmailAlreadyInUse)
@@ -85,6 +97,8 @@ class AuthViewModel: ViewModel() {
         } catch (e: Exception) {
             updateMessage(R.string.Error)
             return@launch
+        } finally {
+            _isLoading.value = false
         }
         if (auth.currentUser == null) {
             updateMessage(R.string.Error)
@@ -94,7 +108,7 @@ class AuthViewModel: ViewModel() {
         _isSuccess.emit(true)
     }
 
-    fun logIn() = CoroutineScope(Dispatchers.IO).launch {
+    fun logIn() = viewModelScope.launch(Dispatchers.IO) {
         when(fieldsValidation) {
             Validations.WrongEmail -> {
                 updateMessage(R.string.WrongEmail)
@@ -107,14 +121,16 @@ class AuthViewModel: ViewModel() {
             else -> {}
         }
         try {
+            _isLoading.value = true
             auth.signInWithEmailAndPassword(email, password).await()
         } catch(e: FirebaseAuthInvalidCredentialsException) {
             updateMessage(R.string.InvalidCredentials)
             return@launch
         } catch (e: Exception) {
             updateMessage(R.string.Error)
-            Log.d("Eroare", e.stackTraceToString())
             return@launch
+        } finally {
+            _isLoading.value = false
         }
         if (auth.currentUser == null) {
             updateMessage(R.string.Error)
@@ -123,9 +139,9 @@ class AuthViewModel: ViewModel() {
         _isSuccess.emit(true)
     }
 
-    private suspend fun updateMessage(msg: Int) {
+    private fun updateMessage(msg: Int) = viewModelScope.launch{
         _errorMsg.emit(msg)
-        delay(2000)
+        delay(5000)
         _errorMsg.emit(null)
     }
 }
