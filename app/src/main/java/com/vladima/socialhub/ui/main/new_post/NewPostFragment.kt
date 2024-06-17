@@ -30,6 +30,7 @@ class NewPostFragment : BaseFragment() {
     private var binding: FragmentNewPostBinding? = null
     private val viewModel: NewPostViewModel by hiltNavGraphViewModels(R.id.nav_graph)
     private var isLoading = false
+    private var cameraIntentFirstLaunch = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +42,8 @@ class NewPostFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        cameraIntentFirstLaunch = savedInstanceState?.getBoolean("cameraIntentFirstLaunch", false) ?: false
 
         binding!!.newPostImage.setOnClickListener {
             if (!isLoading) {
@@ -81,10 +84,17 @@ class NewPostFragment : BaseFragment() {
             }
         }
 
-        if (!viewModel.capturedPhoto) {
+        if (!cameraIntentFirstLaunch) {
             capturePhoto()
+            cameraIntentFirstLaunch = true
         } else {
             binding!!.newPostImage.setImageURI(viewModel.imageFile!!.toUri())
+        }
+
+        findNavController().addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id != R.id.newPostFragment) {
+                viewModel.resetFields()
+            }
         }
     }
 
@@ -113,6 +123,13 @@ class NewPostFragment : BaseFragment() {
             }
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("cameraIntentFirstLaunch", cameraIntentFirstLaunch)
+    }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

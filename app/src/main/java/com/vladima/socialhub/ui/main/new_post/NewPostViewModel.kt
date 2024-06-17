@@ -129,7 +129,7 @@ class NewPostViewModel @Inject constructor(
         return Uri.fromFile(file)
     }
 
-    private fun resetFields() {
+    fun resetFields() {
         imageFile?.delete()
         imageFile = null
         capturedPhoto = false
