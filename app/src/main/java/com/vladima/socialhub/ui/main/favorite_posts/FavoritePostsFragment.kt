@@ -1,24 +1,20 @@
 package com.vladima.socialhub.ui.main.favorite_posts
 
-import androidx.fragment.app.viewModels
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.vladima.socialhub.R
 import com.vladima.socialhub.databinding.FragmentFavoritePostsBinding
 import com.vladima.socialhub.ui.components.PostCard
 import com.vladima.socialhub.ui.components.PostRVAdapter
+import com.vladima.socialhub.ui.helpers.BaseFragment
 import com.vladima.socialhub.ui.helpers.MarginItemDecoration
-import kotlinx.coroutines.launch
 
-class FavoritePostsFragment : Fragment() {
+class FavoritePostsFragment : BaseFragment() {
     private lateinit var binding: FragmentFavoritePostsBinding
     private val viewModel: FavoritePostsViewModel by hiltNavGraphViewModels(R.id.nav_graph)
     private var posts = listOf<PostCard>()
@@ -40,7 +36,7 @@ class FavoritePostsFragment : Fragment() {
 
         postsAdapter = PostRVAdapter(posts) { postCard, _ ->
             deleteSnackbar?.dismiss()
-            viewModel.onMarkForRemoval(postCard, true)
+            viewModel.onMarkForRemoval(postCard)
             Snackbar.make(
                 binding.rvFavoritePosts,
                 getString(R.string.post_removed_snackbar), Snackbar.LENGTH_SHORT
@@ -64,8 +60,7 @@ class FavoritePostsFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = postsAdapter
         }
-
-        lifecycleScope.launch {
+        repeatOnLifecycleStarted {
             viewModel.favoritePosts.collect { posts ->
                 this@FavoritePostsFragment.posts = posts
                 postsAdapter.setNewPosts(posts)

@@ -12,9 +12,9 @@ interface UnsplashAPI {
     @GET("photos")
     @Headers("Accept-Version: v1")
     suspend fun getTopPosts(
-        @Query("client_id") clientId: String = CLIENT,
         @Query("page") page: Int = 1,
-        @Query("per_page") perPage: Int = 20
+        @Query("per_page") perPage: Int = 10,
+        @Query("client_id") clientId: String = CLIENT,
     ): Response<List<UnsplashPost>>
 
     @GET("photos/random")

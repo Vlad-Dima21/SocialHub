@@ -32,6 +32,7 @@ class TopPostsFragmentViewModel @Inject constructor(
 
     private var _topPostsList = listOf<UnsplashPost>()
     private val _topPosts = MutableStateFlow(_topPostsList)
+
     val topPosts = _topPosts.asStateFlow().combine(postsDao.getAllPosts()) { uPosts: List<UnsplashPost>, dbPosts: List<Post> ->
         uPosts.map { uPost ->
             val isFavorite = dbPosts.any { it.postId == uPost.id }
@@ -79,17 +80,38 @@ class TopPostsFragmentViewModel @Inject constructor(
         loadTopPosts()
     }
 
-    fun loadTopPosts() = viewModelScope.launch(Dispatchers.IO) {
-        _isLoading.emit(true)
+    private var unsplashPage: Int = 0
 
+    fun loadTopPosts(loadMore: Boolean = false) = viewModelScope.launch(Dispatchers.IO) {
+
+        if (loadMore && _selectedTopics.isNotEmpty()) {
+            return@launch
+        }
+
+        _isLoading.emit(true)
+        if (!loadMore) {
+            unsplashPage = 0
+        }
+
+        val fetchedPosts = mutableListOf<UnsplashPost>()
         when(_selectedTopics.isNotEmpty()) {
-            true -> RetrofitUnsplashAPI.api.getPostsByTopic(_selectedTopics.joinToString(",") { it.topicId })
-            else -> RetrofitUnsplashAPI.api.getTopPosts()
+            true -> {
+                unsplashPage = 0
+                RetrofitUnsplashAPI.api.getPostsByTopic(_selectedTopics.joinToString(",") { it.topicId })
+            }
+            else -> {
+                unsplashPage++
+                if (unsplashPage > 1) {
+                    fetchedPosts.addAll(_topPostsList)
+                }
+                RetrofitUnsplashAPI.api.getTopPosts(unsplashPage)
+            }
         }.let { response ->
             if (response.isSuccessful) {
                 response.body()?.let { posts ->
-                    _topPostsList = posts
-                    _topPosts.emit(posts)
+                    fetchedPosts.addAll(posts)
+                    _topPostsList = fetchedPosts
+                    _topPosts.emit(fetchedPosts)
                 }
             } else {
                 Log.e("TopPostsFragmentViewModel", "Error loading top posts: ${response.errorBody()}")

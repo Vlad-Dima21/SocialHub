@@ -21,10 +21,11 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.vladima.socialhub.R
 import com.vladima.socialhub.databinding.FragmentNewPostBinding
+import com.vladima.socialhub.ui.helpers.BaseFragment
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
-class NewPostFragment : Fragment() {
+class NewPostFragment : BaseFragment() {
 
     private var binding: FragmentNewPostBinding? = null
     private val viewModel: NewPostViewModel by hiltNavGraphViewModels(R.id.nav_graph)
@@ -53,7 +54,7 @@ class NewPostFragment : Fragment() {
             )
         }
 
-        lifecycleScope.launch {
+        repeatOnLifecycleStarted {
             viewModel.postCreated.collect { postCreated ->
                 if (postCreated) {
                     findNavController().navigate(
@@ -65,13 +66,13 @@ class NewPostFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        repeatOnLifecycleStarted {
             viewModel.helperMessage.collect { message ->
                 binding!!.description.helperText = message ?: ""
             }
         }
 
-        lifecycleScope.launch {
+        repeatOnLifecycleStarted {
             viewModel.isLoading.collect { isLoading ->
                 this@NewPostFragment.isLoading = isLoading
                 binding!!.description.isEnabled = !isLoading

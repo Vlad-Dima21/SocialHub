@@ -2,6 +2,7 @@ package com.vladima.socialhub.ui.components
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vladima.socialhub.databinding.PostCardViewholderBinding
@@ -40,8 +41,10 @@ class PostRVAdapter(
     }
 
     fun setNewPosts(newList: List<PostCard>) {
+        val diffCallback = PostsCallback(posts, newList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         posts = newList
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 }
 

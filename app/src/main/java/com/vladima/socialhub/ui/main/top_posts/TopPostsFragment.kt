@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vladima.socialhub.R
 import com.vladima.socialhub.databinding.FragmentTopPostsBinding
 import com.vladima.socialhub.models.UnsplashPost
@@ -124,5 +125,15 @@ class TopPostsFragment: BaseFragment() {
                 }
             }
         }
+
+        binding?.rvPosts?.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                if (!recyclerView.canScrollVertically(1) && !viewModel.isLoading.value) {
+                    viewModel.loadTopPosts(true)
+                }
+            }
+        })
     }
 }

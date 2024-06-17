@@ -29,6 +29,10 @@ class FavoriteToggle @JvmOverloads constructor(
             onCheckedListener?.invoke(toggleButton.isChecked)
             onChanged()
         }
+        toggleButton.setOnClickListener {
+            onCheckedListener?.invoke(toggleButton.isChecked)
+            onChanged()
+        }
     }
 
     private fun onChanged() {

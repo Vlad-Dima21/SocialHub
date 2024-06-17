@@ -1,7 +1,6 @@
 package com.vladima.socialhub.ui.main.favorite_posts
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -12,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -34,7 +32,7 @@ class FavoritePostsViewModel @Inject constructor(
     }
         .stateIn(viewModelScope, started = SharingStarted.Eagerly, initialValue = emptyList())
 
-    fun onMarkForRemoval(post: PostCard, isChecked: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+    fun onMarkForRemoval(post: PostCard) = viewModelScope.launch(Dispatchers.IO) {
         try {
             val toBeDeleted = postsDao.getPostById(post.postId)
             _deletedPosts.emit(_deletedPosts.value.toMutableList().apply { add(toBeDeleted!!) })
